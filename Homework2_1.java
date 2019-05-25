@@ -1,9 +1,9 @@
 package algorithsCourse;
-
+import java.util.Random;
 import java.util.Iterator;
-
+import java.util.Arrays;
 public class Homework2_1 {
-	public class RandQueue<Item> implements Iterable<Item>{
+	public static class RandQueue<Item> implements Iterable<Item>{
 		private Item[] s;
 		private int N = 0;
 		public RandQueue() {
@@ -15,15 +15,72 @@ public class Homework2_1 {
 		public int size() {
 			return N;
 		}
+		public void shuffle(Item[] arr) {
+			Random rand1 = new Random();
+			//Item[] sCopy = s;
+			int len = arr.length;
+			for (int i = 0; i < len; i ++) {
+				int r = rand1.nextInt(i + 1);
+				Item temp = arr[r];
+				arr[r] = arr[i];
+				arr[i] = temp;
+			}
+		}
+		private void resize(int capacity) {
+			Item[] copy = (Item[]) new Object[capacity];
+			for (int i = 0; i < N; i++) {
+				copy[i] = s[i];}
+			s = copy;
+		}
 		public void enqueue(Item item) {
-			s[++N] = item;
+			s[N++] = item;
+			int cap = s.length;
+			if (N == cap) {
+				resize(cap * 2);
+			}
 			
 		}
-		@Override
+		public Item dequeue() {
+			if (N > 0) {
+				s = Arrays.copyOfRange(s, 0, N);
+				shuffle(s);
+				Item ret = s[--N];
+				int cap = s.length;
+				if (N < cap/4) {
+					resize(cap/2);
+				}
+				return ret;
+			}
+			else { return null;}
+		}
+		public Item sample() {
+			shuffle(s);
+			return s[N];
+		}
+		
+		
 		public Iterator<Item> iterator() {
-			// TODO Auto-generated method stub
-			return null;
+			return new RandQueueIterator();
+		}
+		
+		private class RandQueueIterator implements Iterator<Item>{
+			int cur = 0;
+			Item[] curS = s;
+			public boolean hasNext() {
+				return (cur < N);
+			}	
+			public Item next() {
+				if (cur == 0) {
+					curS = Arrays.copyOfRange(curS, 0, N);
+					shuffle(curS);
+					}
+				return curS[cur++];
+			}
+			
 		}
 		
 	}
-}
+	
+	}
+
+

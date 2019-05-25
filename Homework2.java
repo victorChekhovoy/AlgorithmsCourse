@@ -4,7 +4,7 @@ import java.util.Iterator;
 
 public class Homework2 {
 	
-	public class Deque <Item> implements Iterable<Item>{
+	public static class Deque <Item> implements Iterable<Item>{
 		private Node first = null;
 		private Node last = null;
 		private int size = 0;
@@ -22,9 +22,13 @@ public class Homework2 {
 			Node oldfirst = first;
 			first = new Node();
 			first.item = item;
-			first.next = oldfirst;
-			oldfirst.prev = first;
-			if (first.next == null)  { 
+			first.prev = oldfirst;
+			try {oldfirst.next = first;}
+			catch (java.lang.NullPointerException e) {
+
+			}
+			
+			if (first.prev == null)  { 
 				last = first;
 			}
 		}
@@ -88,7 +92,7 @@ public class Homework2 {
 		Deque<String> test = new Deque<String>();
 		String insert1 = "www";
 		test.addFirst(insert1);
-		System.out.println(test.removeFirst());
+		System.out.println(test.removeLast());
 		
 	}
 }	
